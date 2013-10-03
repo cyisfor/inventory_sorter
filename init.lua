@@ -87,12 +87,24 @@ function registerWand(method,sorter)
             max_drop_level=0
         },
         on_use = function(self,user,punched) 
-            print("Doop!");
-            local meta = minetest.get_meta(minetest.get_pointed_thing_position(punched));
+            local pos = minetest.get_pointed_thing_position(punched);
+            local meta = minetest.get_meta(pos);
             local inv = meta:get_inventory();
             if(inv == nil) then
+                minetest.chat_send_player(user:get_player_name(),"That can't be sorted.","Sorter -!-");
                 return;
             end
+            -- this isn't exported, but default locked chest does this
+            local owner = meta:get_string("owner");
+            if(owner ~= nil and string.len(owner) ~= 0 and user:get_player_name() ~= owner) then
+                minetest.chat_send_player(user:get_player_name(),"That's not yours!","Sorter -!-");
+                return;
+            end
+            -- Sokomine's shared chest locks
+            if locks ~= nil and not locks:lock_allow_use(pos,user) then
+                minetest.chat_send_player(user:get_player_name(),"That's not yours!","Sorter -!-");
+            end
+
             local tabl = meta:to_table()
             inv = tabl["inventory"]["main"];
             if(inv == nil) then
@@ -104,6 +116,7 @@ function registerWand(method,sorter)
             -- note take_item will set the name to '' when empty
             -- NEVER reduce the inventory array size for chests
             meta:from_table(tabl);
+            minetest.chat_send_player(user:get_player_name(),"Sorted.","Sorter -!-");
         end
     });
 end
