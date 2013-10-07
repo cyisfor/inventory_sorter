@@ -136,6 +136,46 @@ function registerWand(method,sorter)
     })
 end
 
+function test()
+    table.sort({nil,nil,nil},sorters.wise)
+    function thingy(name,stack_max)
+        return {
+            get_name=function(self) return name end,
+            get_stack_max=function(self) return stack_max end,
+            get_count=function(self) return stack_max end,
+            get_wear=function(self) return 1/stack_max end,
+            take_item=function() end,
+            add_item=function() end,
+            derp=function()
+                return name..', '..tostring(stack_max)
+            end
+        }
+    end
+    tabl = {thingy('thing1',1),thingy('hting2',1),nil,thingy('thing1',2),thingy('thing1',4),thingy('thing1',10)}
+    function sorter(a,b)
+        result = sorters.wise(a,b)
+        if a then
+            a = a:derp()
+        end
+        if b then
+            b = b:derp()
+        end
+        if result then
+            print('a goes first',a,b)
+        else
+            print('b goes first',a,b)
+        end
+        return result
+    end
+    table.sort(tabl,sorter)
+    for n,v in pairs(tabl) do
+        print(n,v:get_name(),v:get_count())
+    end
+end
+-- test()
+-- print('yay')
+-- error('...')
+
 for name,sorter in pairs(sorters) do
     registerWand(name,sorter)
 end
