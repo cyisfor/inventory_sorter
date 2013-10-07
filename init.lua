@@ -12,7 +12,7 @@ end
 
 --------------------------------------------------------
 
-function sortInventory(inv,sorter) 
+function sortInventory(inv,sorter)
     local tabl = inv:get_list("main")
     if(tabl == nil) then
         -- we don't sort furnaces!
@@ -58,7 +58,7 @@ sorters = {
         -- may need to collapse the two together!
         local bothmax = a:get_stack_max()
         if bothmax == 1 then
-            -- it's unstackable                
+            -- it's unstackable
             local awear = a:get_wear()
             local bwear = b:get_wear()
             return awear < bwear
@@ -107,7 +107,7 @@ function registerWand(method,sorter)
             full_punch_interval=0,
             max_drop_level=0
         },
-        on_use = function(self,user,punched) 
+        on_use = function(self,user,punched)
             local pos = minetest.get_pointed_thing_position(punched)
             if pos==nil then
                 return
