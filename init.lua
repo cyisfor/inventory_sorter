@@ -66,14 +66,17 @@ sorters = {
         local acount = a:get_count()
         local bcount = b:get_count()
         if(acount == bothmax) then
-            return bcount == bothmax
+            --print('same?',acount,bcount,bothmax)
+            return bcount ~= bothmax
         elseif (bcount == bothmax) then
+            --print('bcount bothmax derp')
             return false
         end
         local num = min(bcount,bothmax-acount)
         a:add_item(b:take_item(num))
         -- nothing can have both count AND wear, right?
         -- now a:count > b:count so a should go first
+        --print('numnum',num)
         return true
     end,
     amount = function(a,b)
@@ -136,8 +139,25 @@ function registerWand(method,sorter)
     })
 end
 
+function debugSorter(a,b)
+    result = sorters.wise(a,b)
+    function derp(a)
+        return a:get_name()..":"..a:get_count()..":"..a:get_wear()
+    end
+    if a then
+        a = derp(a)
+    end
+    if b then
+        b = derp(b)
+    end
+    if result then
+        print('a goes first',a,b)
+    else
+        print('b goes first',a,b)
+    end
+    return result
+end
 function test()
-    table.sort({nil,nil,nil},sorters.wise)
     function thingy(name,stack_max)
         return {
             get_name=function(self) return name end,
@@ -152,21 +172,6 @@ function test()
         }
     end
     tabl = {thingy('thing1',1),thingy('hting2',1),nil,thingy('thing1',2),thingy('thing1',4),thingy('thing1',10)}
-    function sorter(a,b)
-        result = sorters.wise(a,b)
-        if a then
-            a = a:derp()
-        end
-        if b then
-            b = b:derp()
-        end
-        if result then
-            print('a goes first',a,b)
-        else
-            print('b goes first',a,b)
-        end
-        return result
-    end
     table.sort(tabl,sorter)
     for n,v in pairs(tabl) do
         print(n,v:get_name(),v:get_count())
