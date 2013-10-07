@@ -66,7 +66,7 @@ sorters = {
         local acount = a:get_count()
         local bcount = b:get_count()
         if(acount == bothmax) then
-            return true
+            return bcount == bothmax
         elseif (bcount == bothmax) then
             return false
         end
