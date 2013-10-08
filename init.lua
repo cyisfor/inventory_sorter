@@ -10,6 +10,12 @@ function min(a,b)
     end
 end
 
+if not string.starts then
+    function string.starts(String,Start)
+        return string.sub(String,1,string.len(Start))==Start
+    end
+end
+
 --------------------------------------------------------
 
 function sortInventory(inv,sorter)
@@ -128,8 +134,8 @@ function registerWand(method,sorter)
                 return
             end
             -- Sokomine's shared chest locks
-            if locks ~= nil and not locks:lock_allow_use(pos,user) then
-                minetest.chat_send_player(user:get_player_name(),"That's not yours!","Sorter -!-")
+            if locks ~= nil and punched.name:starts('locks:') and not locks:lock_allow_use(pos,user) then
+                -- the error has already been reported (yay side effects)
                 return
             end
 
