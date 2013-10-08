@@ -130,6 +130,7 @@ function registerWand(method,sorter)
             -- Sokomine's shared chest locks
             if locks ~= nil and not locks:lock_allow_use(pos,user) then
                 minetest.chat_send_player(user:get_player_name(),"That's not yours!","Sorter -!-")
+                return
             end
 
             if(sortInventory(inv,sorter)) then
