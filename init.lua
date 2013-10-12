@@ -117,9 +117,12 @@ function registerWand(method,sorter)
             max_drop_level=0
         },
         on_use = function(self,user,punched)
-            local pos = minetest.get_pointed_thing_position(punched)
+            local pos = minetest.get_pointed_thing_position(punched)            
             if pos==nil then
                 return
+            end
+            if punched == nil then
+                punched = minetest.get_node(pos)
             end
             local meta = minetest.get_meta(pos)
             local inv = meta:get_inventory()
@@ -134,7 +137,7 @@ function registerWand(method,sorter)
                 return
             end
             -- Sokomine's shared chest locks
-            if locks ~= nil and punched.name:starts('locks:') and not locks:lock_allow_use(pos,user) then
+            if locks ~= nil and punched and punched.name:starts('locks:') and not locks:lock_allow_use(pos,user) then
                 -- the error has already been reported (yay side effects)
                 return
             end
